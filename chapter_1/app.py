@@ -12,10 +12,8 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     volume_credits: int = 0
     result = f'Statement for {invoice["customer"]}\n'
 
-    for perf in invoice["performances"]:
-        play = plays[perf["playID"]]
+    def _amount_for(perf, play):
         this_amount = 0
-
         if play["type"] == "tragedy":
             this_amount = 40000
             if perf["audience"] > 30:
@@ -27,6 +25,11 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             this_amount += 300 * perf["audience"]
         else:
             raise Exception(f'Unknown type: {play["type"]}')
+        return this_amount
+
+    for perf in invoice["performances"]:
+        play = plays[perf["playID"]]
+        this_amount = _amount_for(perf, play)
 
         # add volume credits
         volume_credits += max(perf['audience'] - 30, 0)
@@ -41,6 +44,9 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result += f'Amount owed is {format_usd(total_amount / 100)}\n'
     result += f'You earned {volume_credits} credits\n'
     return result
+
+
+
 
 
 def main():
