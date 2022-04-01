@@ -12,7 +12,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     volume_credits: int = 0
     result = f'Statement for {invoice["customer"]}\n'
 
-    def _amount_for(perf, play):
+    def _amount_for(perf):
         result = 0
         if play_for(perf)["type"] == "tragedy":
             result = 40000
