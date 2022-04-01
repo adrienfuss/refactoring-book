@@ -30,13 +30,20 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     def play_for(perf):
         return plays[perf["playID"]]
 
-    for perf in invoice["performances"]:
+
+    def volume_credits_for(perf):
+        volume_credits =0
+
         # add volume credits
         volume_credits += max(perf['audience'] - 30, 0)
-
         # add extra credits for every ten comedy attendees
         if 'comedy' == play_for(perf)["type"]:
             volume_credits += floor(perf["audience"] / 5)
+        return volume_credits
+
+
+    for perf in invoice["performances"]:
+        volume_credits += volume_credits_for(perf)
 
         # print line for this order
         result += f'    {play_for(perf)["name"]}: {format_usd(_amount_for(perf) / 100)} ({perf["audience"]} seats)\n'
