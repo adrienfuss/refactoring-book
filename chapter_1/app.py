@@ -31,7 +31,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
         return plays[perf["playID"]]
 
     for perf in invoice["performances"]:
-        this_amount = _amount_for(perf, play_for(perf))
+        this_amount = _amount_for(perf)
 
         # add volume credits
         volume_credits += max(perf['audience'] - 30, 0)
