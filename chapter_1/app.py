@@ -13,19 +13,19 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result = f'Statement for {invoice["customer"]}\n'
 
     def _amount_for(perf, play):
-        this_amount = 0
+        result = 0
         if play["type"] == "tragedy":
-            this_amount = 40000
+            result = 40000
             if perf["audience"] > 30:
-                this_amount += 1000 * (perf["audience"] - 30)
+                result += 1000 * (perf["audience"] - 30)
         elif play["type"] == "comedy":
-            this_amount = 30000
+            result = 30000
             if perf['audience'] > 20:
-                this_amount += 10000 + 500 * (perf["audience"] - 20)
-            this_amount += 300 * perf["audience"]
+                result += 10000 + 500 * (perf["audience"] - 20)
+            result += 300 * perf["audience"]
         else:
             raise Exception(f'Unknown type: {play["type"]}')
-        return this_amount
+        return result
 
     for perf in invoice["performances"]:
         play = plays[perf["playID"]]
