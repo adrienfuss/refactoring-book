@@ -14,17 +14,17 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
     def _amount_for(perf, play):
         result = 0
-        if play["type"] == "tragedy":
+        if play_for(perf)["type"] == "tragedy":
             result = 40000
             if perf["audience"] > 30:
                 result += 1000 * (perf["audience"] - 30)
-        elif play["type"] == "comedy":
+        elif play_for(perf)["type"] == "comedy":
             result = 30000
             if perf['audience'] > 20:
                 result += 10000 + 500 * (perf["audience"] - 20)
             result += 300 * perf["audience"]
         else:
-            raise Exception(f'Unknown type: {play["type"]}')
+            raise Exception(f'Unknown type: {play_for(perf)["type"]}')
         return result
 
     def play_for(perf):
