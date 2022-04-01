@@ -27,8 +27,11 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             raise Exception(f'Unknown type: {play["type"]}')
         return result
 
+    def play_for(perf):
+        return plays[perf["playID"]]
+
     for perf in invoice["performances"]:
-        play = plays[perf["playID"]]
+        play = play_for(perf)
         this_amount = _amount_for(perf, play)
 
         # add volume credits
