@@ -32,6 +32,18 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             result += floor(a_performance["audience"] / 5)
         return result
 
+    def total_volume_credits(data):
+        volume_credits: int = 0
+        for a_performance in data['performance']:
+            volume_credits += a_performance['volume_credits']
+        return volume_credits
+
+    def total_amount(data):
+        result: int = 0
+        for a_performance in data['performance']:
+            result += a_performance['amount']
+        return result
+
     def enrich_performance(a_performance):
         result = a_performance.copy()
         result['play'] = play_for(result)
@@ -42,6 +54,8 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
     statement_data['performance'] = list(map(enrich_performance, invoice["performances"]))
+    statement_data['total_amount'] = total_amount(statement_data)
+    statement_data['total_volume_credits'] = total_volume_credits(statement_data)
     result = render_plain_text(statement_data, plays)
 
     return result
@@ -51,23 +65,11 @@ def render_plain_text(data, plays):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
-    def total_volume_credits():
-        volume_credits: int = 0
-        for a_performance in data['performance']:
-            volume_credits += a_performance['volume_credits']
-        return volume_credits
-
-    def total_amount():
-        result: int = 0
-        for a_performance in data['performance']:
-            result += a_performance['amount']
-        return result
-
     result = f"Statement for {data['customer']}\n"
     for a_performance in data['performance']:
         result += f'    {a_performance["play"]["name"]}: {usd(a_performance["amount"])} ({a_performance["audience"]} seats)\n'
-    result += f'Amount owed is {usd(total_amount())}\n'
-    result += f'You earned {total_volume_credits()} credits\n'
+    result += f'Amount owed is {usd(data["total_amount"])}\n'
+    result += f'You earned {data["total_volume_credits"]} credits\n'
     return result
 
 
