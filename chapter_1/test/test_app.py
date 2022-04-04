@@ -1,6 +1,6 @@
 import json
 
-from chapter_1.app import statement
+from chapter_1.statement import statement
 
 
 def test_check_main_output():
