@@ -9,14 +9,7 @@ class PerformanceCalculator:
         self.play = a_play
 
     def amount(self):
-        result = 0
-        if self.play["type"] == "tragedy":
-            raise Exception(f'Bad thing')
-        elif self.play["type"] == "comedy":
-            raise Exception(f'Bad thing')
-        else:
-            raise Exception(f'Unknown type: {self.play["type"]}')
-        return result
+        raise Exception(f'subclass responsibility')
 
     def volume_credits(self):
         result = 0
