@@ -10,6 +10,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
     def enrich_performance(a_performance):
         result =a_performance.copy()
+        result['play'] =play_for(result)
         return result
 
     statement_data = {}
@@ -24,19 +25,19 @@ def render_plain_text(data, plays):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
-    def _amount_for(perf):
+    def _amount_for(a_performance):
         result = 0
-        if play_for(perf)["type"] == "tragedy":
+        if play_for(a_performance)["type"] == "tragedy":
             result = 40000
-            if perf["audience"] > 30:
-                result += 1000 * (perf["audience"] - 30)
-        elif play_for(perf)["type"] == "comedy":
+            if a_performance["audience"] > 30:
+                result += 1000 * (a_performance["audience"] - 30)
+        elif play_for(a_performance)["type"] == "comedy":
             result = 30000
-            if perf['audience'] > 20:
-                result += 10000 + 500 * (perf["audience"] - 20)
-            result += 300 * perf["audience"]
+            if a_performance['audience'] > 20:
+                result += 10000 + 500 * (a_performance["audience"] - 20)
+            result += 300 * a_performance["audience"]
         else:
-            raise Exception(f'Unknown type: {play_for(perf)["type"]}')
+            raise Exception(f'Unknown type: {play_for(a_performance)["type"]}')
         return result
 
     def play_for(perf):
