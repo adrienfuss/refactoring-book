@@ -27,30 +27,27 @@ def render_plain_text(data, plays):
 
     def _amount_for(a_performance):
         result = 0
-        if play_for(a_performance)["type"] == "tragedy":
+        if a_performance['play']["type"] == "tragedy":
             result = 40000
             if a_performance["audience"] > 30:
                 result += 1000 * (a_performance["audience"] - 30)
-        elif play_for(a_performance)["type"] == "comedy":
+        elif a_performance['play']["type"] == "comedy":
             result = 30000
             if a_performance['audience'] > 20:
                 result += 10000 + 500 * (a_performance["audience"] - 20)
             result += 300 * a_performance["audience"]
         else:
-            raise Exception(f'Unknown type: {play_for(a_performance)["type"]}')
+            raise Exception(f'Unknown type: {a_performance["play"]["type"]}')
         return result
 
-    def play_for(perf):
-        return plays[perf["playID"]]
-
-    def volume_credits_for(perf):
+    def volume_credits_for(a_performance):
         result = 0
 
         # add volume credits
-        result += max(perf['audience'] - 30, 0)
+        result += max(a_performance['audience'] - 30, 0)
         # add extra credits for every ten comedy attendees
-        if 'comedy' == play_for(perf)["type"]:
-            result += floor(perf["audience"] / 5)
+        if 'comedy' == a_performance["play"]["type"]:
+            result += floor(a_performance["audience"] / 5)
         return result
 
     def total_volume_credits():
@@ -66,8 +63,8 @@ def render_plain_text(data, plays):
         return result
 
     result = f"Statement for {data['customer']}\n"
-    for perf in data['performance']:
-        result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
+    for a_performance in data['performance']:
+        result += f'    {a_performance["play"]["name"]}: {usd(_amount_for(a_performance))} ({a_performance["audience"]} seats)\n'
     result += f'Amount owed is {usd(total_amount())}\n'
     result += f'You earned {total_volume_credits()} credits\n'
     return result
