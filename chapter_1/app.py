@@ -4,6 +4,11 @@ from typing import Dict, Any
 
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
+
+    def enrich_performance(perf):
+        result =perf.copy()
+        return result
+
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
     statement_data['performance'] = invoice["performances"]
