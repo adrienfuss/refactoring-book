@@ -4,6 +4,10 @@ from typing import Dict, Any
 
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
+    return render_plain_text(create_statement_data(invoice, plays))
+
+
+def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     def play_for(perf):
         return plays[perf["playID"]]
 
@@ -50,10 +54,8 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     statement_data['performances'] = list(map(enrich_performance, invoice["performances"]))
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
-    result = render_plain_text(statement_data)
 
-    return result
-
+    return statement_data
 
 def render_plain_text(data):
     def usd(value: float) -> str:
