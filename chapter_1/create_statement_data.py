@@ -23,20 +23,21 @@ class PerformanceCalculator:
             raise Exception(f'Unknown type: {self.play["type"]}')
         return result
 
+    def volume_credits(self):
+        result = 0
+        # add volume credits
+        result += max(self.performance['audience'] - 30, 0)
+        # add extra credits for every ten comedy attendees
+        if 'comedy' == self.play["type"]:
+            result += floor(self.performance["audience"] / 5)
+        return result
 
 def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     def play_for(perf):
         return plays[perf["playID"]]
 
     def volume_credits_for(a_performance):
-        result = 0
-
-        # add volume credits
-        result += max(a_performance['audience'] - 30, 0)
-        # add extra credits for every ten comedy attendees
-        if 'comedy' == a_performance["play"]["type"]:
-            result += floor(a_performance["audience"] / 5)
-        return result
+        return PerformanceCalculator(a_performance, play_for(a_performance)).volume_credits()
 
     def total_volume_credits(data):
         return sum(item["volume_credits"] for item in data["performances"])
