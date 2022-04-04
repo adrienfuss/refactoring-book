@@ -33,16 +33,10 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
         return result
 
     def total_volume_credits(data):
-        volume_credits: int = 0
-        for a_performance in data['performances']:
-            volume_credits += a_performance['volume_credits']
-        return volume_credits
+        return sum(item["volume_credits"] for item in data["performances"])
 
     def total_amount(data):
-        result: int = 0
-        for a_performance in data['performances']:
-            result += a_performance['amount']
-        return result
+        return sum(item["amount"] for item in data["performances"])
 
     def enrich_performance(a_performance):
         result = a_performance.copy()
