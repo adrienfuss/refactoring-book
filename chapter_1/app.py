@@ -42,8 +42,6 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             volume_credits += volume_credits_for(perf)
         return volume_credits
 
-    volume_credits = total_volume_credits()
-
     total_amount: int = 0
     result = f'Statement for {invoice["customer"]}\n'
     for perf in invoice["performances"]:
@@ -51,7 +49,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
         total_amount += _amount_for(perf)
 
     result += f'Amount owed is {usd(total_amount)}\n'
-    result += f'You earned {volume_credits} credits\n'
+    result += f'You earned {total_volume_credits()} credits\n'
 
     return result
 
