@@ -6,6 +6,7 @@ from typing import Dict, Any
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
+    statement_data['performance'] = invoice["performances"]
     result = render_plain_text(statement_data, invoice, plays)
 
     return result
@@ -45,18 +46,18 @@ def render_plain_text(data, invoice, plays):
 
     def total_volume_credits():
         volume_credits: int = 0
-        for perf in invoice["performances"]:
+        for perf in data['performance']:
             volume_credits += volume_credits_for(perf)
         return volume_credits
 
     def total_amount():
         result: int = 0
-        for perf in invoice["performances"]:
+        for perf in data['performance']:
             result += _amount_for(perf)
         return result
 
     result = f"Statement for {data['customer']}\n"
-    for perf in invoice["performances"]:
+    for perf in data['performance']:
         result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
     result += f'Amount owed is {usd(total_amount())}\n'
     result += f'You earned {total_volume_credits()} credits\n'
