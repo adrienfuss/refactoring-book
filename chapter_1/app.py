@@ -36,9 +36,13 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             result += floor(perf["audience"] / 5)
         return result
 
-    volume_credits: int = 0
-    for perf in invoice["performances"]:
-        volume_credits += volume_credits_for(perf)
+    def total_volume_credits():
+        volume_credits: int = 0
+        for perf in invoice["performances"]:
+            volume_credits += volume_credits_for(perf)
+        return volume_credits
+
+    volume_credits = total_volume_credits()
 
     total_amount: int = 0
     result = f'Statement for {invoice["customer"]}\n'
@@ -50,6 +54,9 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result += f'You earned {volume_credits} credits\n'
 
     return result
+
+
+
 
 
 def main():
