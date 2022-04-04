@@ -9,7 +9,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result = f'Statement for {invoice["customer"]}\n'
 
     def usd(value: float) -> str:
-        return f'${value:,.2f}'
+        return f'${value/100:,.2f}'
 
     def _amount_for(perf):
         result = 0
@@ -43,9 +43,9 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
         volume_credits += volume_credits_for(perf)
 
         # print line for this order
-        result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf) / 100)} ({perf["audience"]} seats)\n'
+        result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
         total_amount += _amount_for(perf)
-    result += f'Amount owed is {usd(total_amount / 100)}\n'
+    result += f'Amount owed is {usd(total_amount)}\n'
     result += f'You earned {volume_credits} credits\n'
     return result
 
