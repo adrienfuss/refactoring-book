@@ -7,12 +7,12 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
     statement_data['performance'] = invoice["performances"]
-    result = render_plain_text(statement_data, invoice, plays)
+    result = render_plain_text(statement_data, plays)
 
     return result
 
 
-def render_plain_text(data, invoice, plays):
+def render_plain_text(data, plays):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
