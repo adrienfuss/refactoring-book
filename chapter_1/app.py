@@ -52,9 +52,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     for perf in invoice["performances"]:
         result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
 
-    total_amount = apple_sauce()
-
-    result += f'Amount owed is {usd(total_amount)}\n'
+    result += f'Amount owed is {usd(apple_sauce())}\n'
     result += f'You earned {total_volume_credits()} credits\n'
 
     return result
