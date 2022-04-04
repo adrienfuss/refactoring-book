@@ -4,13 +4,13 @@ from typing import Dict, Any
 
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
-
-    result = render_plain_text(invoice, plays)
+    statement_data = {}
+    result = render_plain_text(statement_data, invoice, plays)
 
     return result
 
 
-def render_plain_text(invoice, plays):
+def render_plain_text(data, invoice, plays):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
