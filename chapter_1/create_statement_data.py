@@ -12,18 +12,12 @@ class PerformanceCalculator:
         raise Exception(f'subclass responsibility')
 
     def volume_credits(self):
-        result = 0
-        # add volume credits
-        result += max(self.performance['audience'] - 30, 0)
-        # add extra credits for every ten comedy attendees
-        if 'comedy' == self.play["type"]:
-            result += floor(self.performance["audience"] / 5)
-        return result
+        return max(self.performance['audience'] - 30, 0)
 
 
 class TragedyCalculator(PerformanceCalculator):
     def __init__(self, a_performance, a_play):
-        super().__init__( a_performance, a_play)
+        super().__init__(a_performance, a_play)
 
     def amount(self):
         result = 40000
@@ -31,14 +25,10 @@ class TragedyCalculator(PerformanceCalculator):
             result += 1000 * (self.performance["audience"] - 30)
         return result
 
-    def volume_credits(self):
-        result = max(self.performance['audience'] - 30, 0)
-        return result
-
 
 class ComedyCalculator(PerformanceCalculator):
     def __init__(self, a_performance, a_play):
-        super().__init__( a_performance, a_play)
+        super().__init__(a_performance, a_play)
 
     def amount(self):
         result = 30000
@@ -48,10 +38,8 @@ class ComedyCalculator(PerformanceCalculator):
         return result
 
     def volume_credits(self):
-        result = max(self.performance['audience'] - 30, 0)
-        # add extra credits for every ten comedy attendees
-        result += floor(self.performance["audience"] / 5)
-        return result
+        return super().volume_credits() + floor(self.performance["audience"] / 5)
+
 
 def create_performance_calculator(a_performance, a_play):
     if a_play["type"] == "tragedy":
