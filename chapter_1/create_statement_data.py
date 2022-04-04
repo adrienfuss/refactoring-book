@@ -32,6 +32,25 @@ class PerformanceCalculator:
             result += floor(self.performance["audience"] / 5)
         return result
 
+
+class TragedyCalculator(PerformanceCalculator):
+    def __init__(self, a_performance, a_play):
+        super().__init__( a_performance, a_play)
+
+
+class ComedyCalculator(PerformanceCalculator):
+    def __init__(self, a_performance, a_play):
+        super().__init__( a_performance, a_play)
+
+def create_performance_calculator(a_performance, a_play):
+    if a_play["type"] == "tragedy":
+        return TragedyCalculator(a_performance, a_play)
+    elif a_play["type"] == "comedy":
+        return ComedyCalculator(a_performance, a_play)
+    else:
+        raise Exception(f'Unknown type: {a_play["type"]}')
+
+
 def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     def play_for(perf):
         return plays[perf["playID"]]
@@ -43,7 +62,7 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         return sum(item["amount"] for item in data["performances"])
 
     def enrich_performance(a_performance):
-        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
+        calculator = create_performance_calculator(a_performance, play_for(a_performance))
         result = a_performance.copy()
         result['play'] = calculator.play
         result['amount'] = calculator.amount()
