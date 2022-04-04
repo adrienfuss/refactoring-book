@@ -44,10 +44,10 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         result['volume_credits'] = volume_credits_for(result)
         return result
 
-    statement_data = {}
-    statement_data['customer'] = invoice["customer"]
-    statement_data['performances'] = list(map(enrich_performance, invoice["performances"]))
-    statement_data['total_amount'] = total_amount(statement_data)
-    statement_data['total_volume_credits'] = total_volume_credits(statement_data)
+    result = {}
+    result['customer'] = invoice["customer"]
+    result['performances'] = list(map(enrich_performance, invoice["performances"]))
+    result['total_amount'] = total_amount(result)
+    result['total_volume_credits'] = total_volume_credits(result)
 
-    return statement_data
+    return result
