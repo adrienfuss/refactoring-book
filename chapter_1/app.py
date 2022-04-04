@@ -4,9 +4,6 @@ from typing import Dict, Any
 
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
-    total_amount: int = 0
-    volume_credits: int = 0
-    result = f'Statement for {invoice["customer"]}\n'
 
     def usd(value: float) -> str:
         return f'${value/100:,.2f}'
@@ -39,14 +36,19 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             result += floor(perf["audience"] / 5)
         return result
 
+    volume_credits: int = 0
     for perf in invoice["performances"]:
         volume_credits += volume_credits_for(perf)
 
+    total_amount: int = 0
+    result = f'Statement for {invoice["customer"]}\n'
     for perf in invoice["performances"]:
         result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
         total_amount += _amount_for(perf)
+
     result += f'Amount owed is {usd(total_amount)}\n'
     result += f'You earned {volume_credits} credits\n'
+
     return result
 
 
