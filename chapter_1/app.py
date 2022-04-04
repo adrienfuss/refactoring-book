@@ -5,13 +5,16 @@ from typing import Dict, Any
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
+    def play_for(perf):
+        return plays[perf["playID"]]
+
     def enrich_performance(perf):
         result =perf.copy()
         return result
 
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
-    statement_data['performance'] = invoice["performances"]
+    statement_data['performance'] = enrich_performance(invoice["performances"])
     result = render_plain_text(statement_data, plays)
 
     return result
