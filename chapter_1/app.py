@@ -34,13 +34,13 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
     def total_volume_credits(data):
         volume_credits: int = 0
-        for a_performance in data['performance']:
+        for a_performance in data['performances']:
             volume_credits += a_performance['volume_credits']
         return volume_credits
 
     def total_amount(data):
         result: int = 0
-        for a_performance in data['performance']:
+        for a_performance in data['performances']:
             result += a_performance['amount']
         return result
 
@@ -53,7 +53,7 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
     statement_data = {}
     statement_data['customer'] = invoice["customer"]
-    statement_data['performance'] = list(map(enrich_performance, invoice["performances"]))
+    statement_data['performances'] = list(map(enrich_performance, invoice["performances"]))
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
     result = render_plain_text(statement_data)
@@ -66,7 +66,7 @@ def render_plain_text(data):
         return f'${value / 100:,.2f}'
 
     result = f"Statement for {data['customer']}\n"
-    for a_performance in data['performance']:
+    for a_performance in data['performances']:
         result += f'    {a_performance["play"]["name"]}: {usd(a_performance["amount"])} ({a_performance["audience"]} seats)\n'
     result += f'Amount owed is {usd(data["total_amount"])}\n'
     result += f'You earned {data["total_volume_credits"]} credits\n'
