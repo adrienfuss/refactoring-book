@@ -4,26 +4,8 @@ from typing import Dict, Any
 
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
-
     def play_for(perf):
         return plays[perf["playID"]]
-
-    def enrich_performance(a_performance):
-        result =a_performance.copy()
-        result['play'] =play_for(result)
-        return result
-
-    statement_data = {}
-    statement_data['customer'] = invoice["customer"]
-    statement_data['performance'] = list(map(enrich_performance, invoice["performances"]))
-    result = render_plain_text(statement_data, plays)
-
-    return result
-
-
-def render_plain_text(data, plays):
-    def usd(value: float) -> str:
-        return f'${value / 100:,.2f}'
 
     def _amount_for(a_performance):
         result = 0
@@ -39,6 +21,25 @@ def render_plain_text(data, plays):
         else:
             raise Exception(f'Unknown type: {a_performance["play"]["type"]}')
         return result
+
+
+    def enrich_performance(a_performance):
+        result = a_performance.copy()
+        result['play'] = play_for(result)
+        result['amount'] = _amount_for(result)
+        return result
+
+    statement_data = {}
+    statement_data['customer'] = invoice["customer"]
+    statement_data['performance'] = list(map(enrich_performance, invoice["performances"]))
+    result = render_plain_text(statement_data, plays)
+
+    return result
+
+
+def render_plain_text(data, plays):
+    def usd(value: float) -> str:
+        return f'${value / 100:,.2f}'
 
     def volume_credits_for(a_performance):
         result = 0
@@ -58,13 +59,13 @@ def render_plain_text(data, plays):
 
     def total_amount():
         result: int = 0
-        for perf in data['performance']:
-            result += _amount_for(perf)
+        for a_performance in data['performance']:
+            result += a_performance['amount']
         return result
 
     result = f"Statement for {data['customer']}\n"
     for a_performance in data['performance']:
-        result += f'    {a_performance["play"]["name"]}: {usd(_amount_for(a_performance))} ({a_performance["audience"]} seats)\n'
+        result += f'    {a_performance["play"]["name"]}: {usd(a_performance["amount"])} ({a_performance["audience"]} seats)\n'
     result += f'Amount owed is {usd(total_amount())}\n'
     result += f'You earned {total_volume_credits()} credits\n'
     return result
