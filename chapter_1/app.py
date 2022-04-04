@@ -56,12 +56,12 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     statement_data['performance'] = list(map(enrich_performance, invoice["performances"]))
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
-    result = render_plain_text(statement_data, plays)
+    result = render_plain_text(statement_data)
 
     return result
 
 
-def render_plain_text(data, plays):
+def render_plain_text(data):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
