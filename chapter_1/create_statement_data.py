@@ -11,9 +11,7 @@ class PerformanceCalculator:
     def amount(self):
         result = 0
         if self.play["type"] == "tragedy":
-            result = 40000
-            if self.performance["audience"] > 30:
-                result += 1000 * (self.performance["audience"] - 30)
+            raise Exception(f'Bad thing')
         elif self.play["type"] == "comedy":
             result = 30000
             if self.performance['audience'] > 20:
@@ -36,6 +34,16 @@ class PerformanceCalculator:
 class TragedyCalculator(PerformanceCalculator):
     def __init__(self, a_performance, a_play):
         super().__init__( a_performance, a_play)
+
+    def amount(self):
+        result = 40000
+        if self.performance["audience"] > 30:
+            result += 1000 * (self.performance["audience"] - 30)
+        return result
+
+    def volume_credits(self):
+        result = max(self.performance['audience'] - 30, 0)
+        return result
 
 
 class ComedyCalculator(PerformanceCalculator):
