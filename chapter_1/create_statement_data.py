@@ -48,7 +48,7 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         calculator = PerformanceCalculator(a_performance, play_for(a_performance))
         result = a_performance.copy()
         result['play'] = calculator.play
-        result['amount'] = PerformanceCalculator(result, play_for(result)).amount()
+        result['amount'] = calculator.amount()
         result['volume_credits'] = volume_credits_for(result)
         return result
 
