@@ -22,11 +22,21 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
             raise Exception(f'Unknown type: {a_performance["play"]["type"]}')
         return result
 
+    def volume_credits_for(a_performance):
+        result = 0
+
+        # add volume credits
+        result += max(a_performance['audience'] - 30, 0)
+        # add extra credits for every ten comedy attendees
+        if 'comedy' == a_performance["play"]["type"]:
+            result += floor(a_performance["audience"] / 5)
+        return result
 
     def enrich_performance(a_performance):
         result = a_performance.copy()
         result['play'] = play_for(result)
         result['amount'] = _amount_for(result)
+        result['volume_credits'] = volume_credits_for(result)
         return result
 
     statement_data = {}
@@ -41,20 +51,10 @@ def render_plain_text(data, plays):
     def usd(value: float) -> str:
         return f'${value / 100:,.2f}'
 
-    def volume_credits_for(a_performance):
-        result = 0
-
-        # add volume credits
-        result += max(a_performance['audience'] - 30, 0)
-        # add extra credits for every ten comedy attendees
-        if 'comedy' == a_performance["play"]["type"]:
-            result += floor(a_performance["audience"] / 5)
-        return result
-
     def total_volume_credits():
         volume_credits: int = 0
-        for perf in data['performance']:
-            volume_credits += volume_credits_for(perf)
+        for a_performance in data['performance']:
+            volume_credits += a_performance['volume_credits']
         return volume_credits
 
     def total_amount():
