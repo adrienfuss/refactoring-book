@@ -4,17 +4,17 @@ from typing import Dict, Any
 
 class PerformanceCalculator:
 
-    def __init__(self, a_performance,a_play):
+    def __init__(self, a_performance, a_play):
         self.performance = a_performance
         self.play = a_play
 
     def amount(self):
         result = 0
-        if self.play ["type"] == "tragedy":
+        if self.play["type"] == "tragedy":
             result = 40000
             if self.performance["audience"] > 30:
                 result += 1000 * (self.performance["audience"] - 30)
-        elif self.play ["type"] == "comedy":
+        elif self.play["type"] == "comedy":
             result = 30000
             if self.performance['audience'] > 20:
                 result += 10000 + 500 * (self.performance["audience"] - 20)
@@ -29,19 +29,7 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         return plays[perf["playID"]]
 
     def _amount_for(a_performance):
-        result = 0
-        if a_performance['play']["type"] == "tragedy":
-            result = 40000
-            if a_performance["audience"] > 30:
-                result += 1000 * (a_performance["audience"] - 30)
-        elif a_performance['play']["type"] == "comedy":
-            result = 30000
-            if a_performance['audience'] > 20:
-                result += 10000 + 500 * (a_performance["audience"] - 20)
-            result += 300 * a_performance["audience"]
-        else:
-            raise Exception(f'Unknown type: {a_performance["play"]["type"]}')
-        return result
+        return PerformanceCalculator(a_performance, play_for(a_performance)).amount()
 
     def volume_credits_for(a_performance):
         result = 0
@@ -60,7 +48,7 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         return sum(item["amount"] for item in data["performances"])
 
     def enrich_performance(a_performance):
-        calculator = PerformanceCalculator(a_performance,play_for(a_performance))
+        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
         result = a_performance.copy()
         result['play'] = calculator.play
         result['amount'] = _amount_for(result)
