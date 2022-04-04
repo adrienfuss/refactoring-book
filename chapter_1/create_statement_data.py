@@ -2,6 +2,12 @@ from math import floor
 from typing import Dict, Any
 
 
+class PerformanceCalculator:
+
+    def __init__(self, a_performance):
+        self.performance = a_performance
+
+
 def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     def play_for(perf):
         return plays[perf["playID"]]
@@ -38,6 +44,7 @@ def create_statement_data(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str
         return sum(item["amount"] for item in data["performances"])
 
     def enrich_performance(a_performance):
+        calculator = PerformanceCalculator(a_performance)
         result = a_performance.copy()
         result['play'] = play_for(result)
         result['amount'] = _amount_for(result)
