@@ -5,8 +5,14 @@ from typing import Dict, Any
 
 def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
 
+    result = render_plain_text(invoice, plays)
+
+    return result
+
+
+def render_plain_text(invoice, plays):
     def usd(value: float) -> str:
-        return f'${value/100:,.2f}'
+        return f'${value / 100:,.2f}'
 
     def _amount_for(perf):
         result = 0
@@ -51,14 +57,9 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result = f'Statement for {invoice["customer"]}\n'
     for perf in invoice["performances"]:
         result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
-
     result += f'Amount owed is {usd(total_amount())}\n'
     result += f'You earned {total_volume_credits()} credits\n'
-
     return result
-
-
-
 
 
 def main():
