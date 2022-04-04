@@ -46,7 +46,10 @@ def statement(invoice: Dict[str, Any], plays: Dict[str, Any]) -> str:
     result = f'Statement for {invoice["customer"]}\n'
     for perf in invoice["performances"]:
         result += f'    {play_for(perf)["name"]}: {usd(_amount_for(perf))} ({perf["audience"]} seats)\n'
+
+    for perf in invoice["performances"]:
         total_amount += _amount_for(perf)
+
 
     result += f'Amount owed is {usd(total_amount)}\n'
     result += f'You earned {total_volume_credits()} credits\n'
